@@ -71,7 +71,7 @@ class Shuttle:
                 for time in times:
                     if "<td>" not in time:
                         continue
-                    time = time.replace("<td>","").replace('</td>',"")
+                    time = time.replace("<td>","").replace('</td>',"").replace('<p>',"").replace('</p>',"")
                     tmptimes.append(time)
                 all_time_one_Table.append(tmptimes)
             all_time.append(all_time_one_Table)
@@ -80,6 +80,7 @@ class Shuttle:
         result.append(all_location)
         result.append(all_time)
         self.__time_table = result
+        return result
 
     def hasShuttleTimeTable(self):
         if(len(self.__time_table)==0):
@@ -104,13 +105,15 @@ class Shuttle:
         search_time = datetime.strptime(time_string,'%H:%M')
 
         for time in self.__time_table[2][tableIndex]:
-            systemTime = datetime.strptime(time[locationIndex],'%I:%M   %p')
+            print(time[locationIndex])
+            systemTime = datetime.strptime(time[locationIndex].strip(),'%I:%M %p')
+            systemTime = datetime.strptime(time[locationIndex].strip(),'%I:%M %p')
             if systemTime < search_time:
                 continue
             else:
-                return  ["%s:%s" % (systemTime.hour, systemTime.minute),"%s:%s" % (systemTime.hour-search_time.hour, systemTime.minute-search_time.minute)]
+                return  ["%s:%s" % (systemTime.hour, systemTime.minute),systemTime.hour,systemTime.minute]
             
-        return ["No shuttle today","No shuttle today"]
+        return ["No more shuttle today","No more shuttle today"]
     
     def getShuttleStop(self):
         return self.__time_table[1][0]
@@ -155,3 +158,4 @@ def findShuttle(shuttle,day,hour,minute,stop):
         return  Skinker_DeBaliviere_Shuttle.findShuttleTime(day,hour,minute,stop)
     if(shuttle == "South Campus Shuttle"):
         return  South_Campus_Shuttle.findShuttleTime(day,hour,minute,stop)
+    

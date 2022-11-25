@@ -1,6 +1,6 @@
 import { StyleSheet,ActivityIndicator,Switch} from 'react-native';
 import React, { useState,useEffect } from 'react'
-
+// npx expo-cli start
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -18,19 +18,18 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [waitTime, setWaitTime] = useState('No time');
-  const [waitTimeLeft, setWaitTimeLeft] = useState('No time');
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [time, setTime] = useState(Date.now());
-
-  var shuttleName = "South Campus Shuttle";
-  var stop = "801 Skinker";
+  const [waitTimeLeftH, setWaitTimeLeftH] = useState("0");
+  const [waitTimeLeftM, setWaitTimeLeftM] = useState("0");
+  const [selectedShuttle, setSelectedShuttle] = React.useState("South Campus Shuttle");
+  const [selectedShuttleStop, setSelectedShuttleStop] = React.useState("801 Skinker");
+  const [menu, setMenu] = useState(0);
   var day = new Date().getDay();
   // var day = 2
   var hour = new Date().getHours();
-  // var hour = 13
+  // var hour = 7
   var minute = new Date().getMinutes(); 
   // var minute = 30
-  var htmlDropdown = '<label for="dog-names">Choose a dog name:</label><select name="dog-names" id="dog-names"><option value="rigatoni">Rigatoni</option><option value="dave">Dave</option><option value="pumpernickel">Pumpernickel</option><option value="reeses">Reeses</option></select>'
+  
   //accept or reject
   const getData = async () => {
      try {
@@ -41,20 +40,21 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-          shuttle: shuttleName, 
+          shuttle: selectedShuttle, 
           day: JSON.stringify(day),
           hour: JSON.stringify(hour),
           minute: JSON.stringify(minute),
-          stop: stop
+          stop: selectedShuttleStop
         })
       });
       // const response = await fetch('https://reactnative.dev/movies.json');
       const json = await response.json();
       // obj = JSON.parse(json); how to copy json data?
       // why I need data
-      setData(json);
+      // setData(json)
       setWaitTime(json.time)
-      setWaitTimeLeft(json.time_left)
+      setWaitTimeLeftH(json.hour)
+      setWaitTimeLeftM(json.minute)
       console.log(json);
     } catch (error) {
       console.error(error);
@@ -62,6 +62,72 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       setLoading(false);
     }
   }
+  const dropdownShuttle = [
+    {key:'South Campus Shuttle', value:'South Campus Shuttle'},
+    {key:'Campus Circulator', value:'Campus Circulator'},
+    {key:'DeBaliviere Place Shuttle', value:'DeBaliviere Place Shuttle'},
+    {key:'Delmar Loop Shuttle', value:'Delmar Loop Shuttle'},
+    {key:'Lewis Collaborative Shuttle', value:'Lewis Collaborative Shuttle'},
+    {key:'Skinker-DeBaliviere Shuttle', value:'Skinker-DeBaliviere Shuttle'},
+  ]
+  const dropdownStop = [
+    [
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'Rosebury  Skinker', value:'Rosebury  Skinker'},
+      {key:'801 Skinker', value:'801 Skinker'},
+      {key:'DeMun  Clayton', value:'DeMun  Clayton'},
+      {key:'South Campus', value:'South Campus'},
+      {key:'Concordia', value:'Concordia'},
+    ],
+    [
+      {key:'S-40, Habif Health', value:'S-40, Habif Health'},
+      {key:'S-40, Clocktower', value:'S-40, Clocktower'},
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'Snow Way', value:'Snow Way'},
+      {key:'Millbrook Garage', value:'Millbrook Garage'},
+      {key:'East End Garage', value:'East End Garage'},
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+    ],
+    [
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'DeBalivere', value:'DeBalivere'},
+      {key:'Pershing', value:'Pershing'},
+      {key:'Belt', value:'Belt'},
+      {key:'Waterman', value:'Waterman'},
+      {key:'Clara', value:'Clara'},
+    ],
+    [
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'Lofts Apartments', value:'Lofts Apartments'},
+      {key:'Westgate', value:'Westgate'},
+      {key:'Washington Avenue', value:'Washington Avenue'},
+      {key:'Wash Ave  Kingsland', value:'Wash Ave  Kingsland'},
+      {key:'560 Music Center  ', value:'560 Music Center  '},
+      {key:'S-40, Habif Health  ', value:'S-40, Habif Health  '},
+      {key:'S-40, Clocktower  ', value:'S-40, Clocktower  '},
+    ],
+    [
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'U-City Grill', value:'U-City Grill'},
+      {key:'Lewis Collab', value:'Lewis Collab'},
+      {key:'Clemons  Syracuse', value:'Clemons  Syracuse'},
+      {key:'Clemons  Leland', value:'Clemons  Leland'},
+      {key:'Clemons  Interdrive', value:'Clemons  Interdrive'},
+      {key:'Clemons  Eastgate', value:'Clemons  Eastgate'},
+      {key:'Eastgate  Cates', value:'Eastgate  Cates'},
+      {key:'Skinker  Delmar', value:'Skinker  Delmar'},
+    ],
+    [
+      {key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza'},
+      {key:'Skinker  Pershing', value:'Skinker  Pershing'},
+      {key:'Westminster  Skinker', value:'Westminster  Skinker'},
+      {key:'Westminster', value:'Westminster'},
+      {key:'Rosedale  Washington', value:'Rosedale  Washington'},
+      {key:'Washington  Des Peres', value:'Washington  Des Peres'},
+      {key:'Kingsbury  Des Peres', value:'Kingsbury  Des Peres'},
+      {key:'Des Peres  Forest Park', value:'Des Peres  Forest Park'},
+    ]
+  ]
   //can pending
   // const getData2 = async () => {
   //   axios({
@@ -82,59 +148,45 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   //     setLoading(false)
   //   })
   // }
-
   // useEffect(() => {
-  //   alert("change")
-  // });
-
+  //   getData()
+  //   alert("get")
+  // },[]);
+  useEffect(() => {
+    getData()
+  }, [isLoading,selectedShuttleStop]);
+  const searchindex = ['South Campus Shuttle','Campus Circulator','DeBaliviere Place Shuttle','Delmar Loop Shuttle','Lewis Collaborative Shuttle','Skinker-DeBaliviere Shuttle']
+  useEffect(() => {
+    const index = searchindex.indexOf(selectedShuttle)
+    setMenu(index)
+  }, [selectedShuttle]);
   
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-  const [selected, setSelected] = React.useState("");
-  const dropdown = [
-    // {key:'0', value:'Seclect shuttle',disabled:true},
-    {key:'1', value:'South Campus'},
-    {key:'2', value:'Campus Circulator'},
-    {key:'3', value:'DeBaliviere Place Shuttle'},
-    {key:'4', value:'Delmar Loop Shuttle'},
-    {key:'5', value:'Lewis Collaborative Shuttle'},
-    {key:'6', value:'Skinker-DeBaliviere Shuttle'},
-  ]
   return (
-    
     <View style={styles.container}>
       {isLoading ? <ActivityIndicator/> : (
         <View>
-          <Text style = {styles.title}>Next {(stop=='Campus Circulator') ? shuttleName : 'shuttle'} at {stop}: {waitTime}</Text>
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          <Text style = {styles.title}>Wait Time Left: {waitTimeLeft}</Text>
-          {/* <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
-          {/* <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          /> */}
           
-          {/* <SelectList 
-            // onSelect={() => alert(selected)}
-            setSelected={setSelected} 
+          
+          <SelectList 
+            setSelected={setSelectedShuttle} 
             fontFamily='lato'
-            data={dropdown}  
+            data={dropdownShuttle}  
             search={false} 
             boxStyles={{borderRadius:0}} //override default styles
-            defaultOption={{ key:'1', value:'South Campus' }}   //default selected option
-          /> */}
-          {/* <SelectList 
-            // onSelect={() => alert(selected)}
-            setSelected={setSelected} 
+            defaultOption={{ key:'South Campus Shuttle', value:'South Campus Shuttle' }}   //default selected option
+          />
+          <SelectList 
+            setSelected={setSelectedShuttleStop} 
             fontFamily='lato'
-            data={dropdown}  
+            data={dropdownStop[menu]}  
             search={false} 
             boxStyles={{borderRadius:0}} //override default styles
-            defaultOption={{ key:'1', value:'Mobiles' }}   //default selected option
-          /> */}
+            defaultOption={{ key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza' }}   //default selected option
+          />
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <Text style = {styles.title}>Next {selectedShuttle} at {selectedShuttleStop}: {waitTime}</Text>
+          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <Text style = {styles.title}>Wait Time Left: {(parseInt(waitTimeLeftH) - (new Date().getHours())) * 60 + (parseInt(waitTimeLeftM) - (new Date().getMinutes()))} minutes</Text>
         </View>
       )}
     </View>

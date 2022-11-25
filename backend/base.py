@@ -3,13 +3,14 @@ from flask import Flask
 from flask_cors import CORS
 from flask import request
 import crawler
-
+# python3 -m venv env
+# source env/bin/activate
+# flask run
 api = Flask(__name__)
 CORS(api)
 
 @api.route('/shuttle', methods=['GET', 'POST'])
-def findShuttle():
-    print(request.get_json())
+def getResult():
     value = request.get_json()
     shuttle = value['shuttle']
     day = value['day'] 
@@ -19,7 +20,8 @@ def findShuttle():
     result = crawler.findShuttle(shuttle,day,hour,minute,stop)
     response_body = {
         "time" : result[0],
-        "time_left": result[1]
+        "hour" : result[1],
+        "minute": result[2],
     }
     return response_body
 
