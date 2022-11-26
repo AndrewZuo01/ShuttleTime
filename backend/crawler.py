@@ -80,7 +80,6 @@ class Shuttle:
         result.append(all_location)
         result.append(all_time)
         self.__time_table = result
-        return result
 
     def hasShuttleTimeTable(self):
         if(len(self.__time_table)==0):
@@ -105,57 +104,36 @@ class Shuttle:
         search_time = datetime.strptime(time_string,'%H:%M')
 
         for time in self.__time_table[2][tableIndex]:
-            print(time[locationIndex])
             systemTime = datetime.strptime(time[locationIndex].strip(),'%I:%M %p')
             systemTime = datetime.strptime(time[locationIndex].strip(),'%I:%M %p')
             if systemTime < search_time:
                 continue
             else:
-                return  ["%s:%s" % (systemTime.hour, systemTime.minute),systemTime.hour,systemTime.minute]
+                minute_value = systemTime.minute
+                if  minute_value<0:
+                    minute_value = '0' + str(minute_value)
+                time = str(systemTime.hour) + ':' + str(minute_value)
+                return  [time,systemTime.hour,minute_value]
             
-        return ["No more shuttle today","No more shuttle today"]
+        return ["No more shuttle today","No more shuttle today","No more shuttle today"]
     
     def getShuttleStop(self):
         return self.__time_table[1][0]
-    
-        
-        
 
-# all shuttles object
-Campus_Circulator  = Shuttle('Campus Circulator',0,1,'campus-circulator')
-DeBaliviere_Place_Shuttle = Shuttle('DeBaliviere Place Shuttle',0,2,'debaliviere-place')
-Delmar_Loop_Shuttle = Shuttle('Delmar Loop Shuttle',1,1,'delmar-loop')
-Lewis_Collaborative_Shuttle = Shuttle('Lewis Collaborative Shuttle',2,1,'lewis-center')
-Skinker_DeBaliviere_Shuttle = Shuttle('Skinker-DeBaliviere Shuttle',3,1,'skinker-debaliviere')
-South_Campus_Shuttle = Shuttle('South Campus Shuttle',4,1,'south-campus')
+# def updateAllWebsiteData():
+#     if not(Campus_Circulator.hasShuttleTimeTable() and DeBaliviere_Place_Shuttle.hasShuttleTimeTable() and Delmar_Loop_Shuttle.hasShuttleTimeTable() and Lewis_Collaborative_Shuttle.hasShuttleTimeTable() and Skinker_DeBaliviere_Shuttle.hasShuttleTimeTable() and South_Campus_Shuttle.hasShuttleTimeTable()):
+#         Campus_Circulator.fetchDataFromWebsite()
+#         DeBaliviere_Place_Shuttle.fetchDataFromWebsite()
+#         Delmar_Loop_Shuttle.fetchDataFromWebsite()
+#         Lewis_Collaborative_Shuttle.fetchDataFromWebsite()
+#         Skinker_DeBaliviere_Shuttle.fetchDataFromWebsite()
+#         South_Campus_Shuttle.fetchDataFromWebsite()
 
-def updateAllWebsiteData():
-    if not(Campus_Circulator.hasShuttleTimeTable() and DeBaliviere_Place_Shuttle.hasShuttleTimeTable() and Delmar_Loop_Shuttle.hasShuttleTimeTable() and Lewis_Collaborative_Shuttle.hasShuttleTimeTable() and Skinker_DeBaliviere_Shuttle.hasShuttleTimeTable() and South_Campus_Shuttle.hasShuttleTimeTable()):
-        Campus_Circulator.fetchDataFromWebsite()
-        DeBaliviere_Place_Shuttle.fetchDataFromWebsite()
-        Delmar_Loop_Shuttle.fetchDataFromWebsite()
-        Lewis_Collaborative_Shuttle.fetchDataFromWebsite()
-        Skinker_DeBaliviere_Shuttle.fetchDataFromWebsite()
-        South_Campus_Shuttle.fetchDataFromWebsite()
+#     print(Campus_Circulator.getShuttleStop())
+#     print( DeBaliviere_Place_Shuttle.getShuttleStop())
+#     print(Delmar_Loop_Shuttle.getShuttleStop())
+#     print(Lewis_Collaborative_Shuttle.getShuttleStop())
+#     print(Skinker_DeBaliviere_Shuttle.getShuttleStop())
+#     print(South_Campus_Shuttle.getShuttleStop())
 
-    print(Campus_Circulator.getShuttleStop())
-    print( DeBaliviere_Place_Shuttle.getShuttleStop())
-    print(Delmar_Loop_Shuttle.getShuttleStop())
-    print(Lewis_Collaborative_Shuttle.getShuttleStop())
-    print(Skinker_DeBaliviere_Shuttle.getShuttleStop())
-    print(South_Campus_Shuttle.getShuttleStop())
 
-def findShuttle(shuttle,day,hour,minute,stop):
-    if(shuttle == "Campus Circulator"):
-        return  Campus_Circulator.findShuttleTime(day,hour,minute,stop)
-    if(shuttle == "DeBaliviere Place Shuttle"):
-        return  DeBaliviere_Place_Shuttle.findShuttleTime(day,hour,minute,stop)
-    if(shuttle == "Delmar Loop Shuttle"):
-        return  Delmar_Loop_Shuttle.findShuttleTime(day,hour,minute,stop)
-    if(shuttle == "Lewis Collaborative Shuttle"):
-        return  Lewis_Collaborative_Shuttle.findShuttleTime(day,hour,minute,stop)
-    if(shuttle == "Skinker-DeBaliviere Shuttle"):
-        return  Skinker_DeBaliviere_Shuttle.findShuttleTime(day,hour,minute,stop)
-    if(shuttle == "South Campus Shuttle"):
-        return  South_Campus_Shuttle.findShuttleTime(day,hour,minute,stop)
-    

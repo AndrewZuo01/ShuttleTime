@@ -31,9 +31,12 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   // var minute = 30
   
   //accept or reject
-  const getData = async () => {
-     try {
-      const response = await fetch('http://127.0.0.1:5000/shuttle', { 
+  const getData = async (loc: string | null | undefined) => {
+    if(loc == null)
+      loc = selectedShuttleStop
+      
+      try {
+        const response = await fetch('http://127.0.0.1:5000/shuttle', { 
         method: 'post', 
         headers: {
           Accept: 'application/json',
@@ -44,7 +47,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           day: JSON.stringify(day),
           hour: JSON.stringify(hour),
           minute: JSON.stringify(minute),
-          stop: selectedShuttleStop
+          stop: loc
         })
       });
       // const response = await fetch('https://reactnative.dev/movies.json');
@@ -153,12 +156,15 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   //   alert("get")
   // },[]);
   useEffect(() => {
-    getData()
+    getData(null)
   }, [isLoading,selectedShuttleStop]);
   const searchindex = ['South Campus Shuttle','Campus Circulator','DeBaliviere Place Shuttle','Delmar Loop Shuttle','Lewis Collaborative Shuttle','Skinker-DeBaliviere Shuttle']
   useEffect(() => {
+    setSelectedShuttleStop("Mallinckrodt Bus Plaza")
+    getData("Mallinckrodt Bus Plaza")
     const index = searchindex.indexOf(selectedShuttle)
     setMenu(index)
+    
   }, [selectedShuttle]);
   
   return (
