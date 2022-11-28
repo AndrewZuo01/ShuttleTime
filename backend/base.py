@@ -32,9 +32,27 @@ def getResult():
     }
     return response_body
 
-@api.route('/test')
+@api.route('/setstop')
+def setStop():
+    value = request.get_json()
+    shuttle = value['shuttle']
+    hour = value['hour'] 
+    minute = value['minute'] 
+    stop = value['stop'] 
+    setShuttleStop(shuttle,hour,minute,stop)
+
+
+@api.route('/findstop')
 def findStop():
-    return "not yet implemented"
+    value = request.get_json()
+    shuttle = value['shuttle']
+    stop = value['stop'] 
+    result = findShuttleStop(shuttle,stop)
+    response_body = {
+        "result" : result
+    }
+    return response_body
+
 
 def findShuttle(shuttle,day,hour,minute,stop):
     if(shuttle == "Campus Circulator"):
@@ -49,6 +67,35 @@ def findShuttle(shuttle,day,hour,minute,stop):
         return  Skinker_DeBaliviere_Shuttle.findShuttleTime(day,hour,minute,stop)
     if(shuttle == "South Campus Shuttle"):
         return  South_Campus_Shuttle.findShuttleTime(day,hour,minute,stop)
+
+def findShuttleStop(shuttle,hour,minute,stop):
+    if(shuttle == "Campus Circulator"):
+        return  Campus_Circulator.findShuttleStop(stop)
+    if(shuttle == "DeBaliviere Place Shuttle"):
+        return  DeBaliviere_Place_Shuttle.findShuttleStop(stop)
+    if(shuttle == "Delmar Loop Shuttle"):
+        return  Delmar_Loop_Shuttle.findShuttleStop(stop)
+    if(shuttle == "Lewis Collaborative Shuttle"):
+        return  Lewis_Collaborative_Shuttle.findShuttleStop(stop)
+    if(shuttle == "Skinker-DeBaliviere Shuttle"):
+        return  Skinker_DeBaliviere_Shuttle.findShuttleStop(stop)
+    if(shuttle == "South Campus Shuttle"):
+        return  South_Campus_Shuttle.findShuttleStop(stop)
+    
+def setShuttleStop(shuttle,hour,minute,stop):
+    if(shuttle == "Campus Circulator"):
+        return  Campus_Circulator.setShuttleStop(hour,minute,stop)
+    if(shuttle == "DeBaliviere Place Shuttle"):
+        return  DeBaliviere_Place_Shuttle.setShuttleStop(hour,minute,stop)
+    if(shuttle == "Delmar Loop Shuttle"):
+        return  Delmar_Loop_Shuttle.setShuttleStop(hour,minute,stop)
+    if(shuttle == "Lewis Collaborative Shuttle"):
+        return  Lewis_Collaborative_Shuttle.setShuttleStop(hour,minute,stop)
+    if(shuttle == "Skinker-DeBaliviere Shuttle"):
+        return  Skinker_DeBaliviere_Shuttle.setShuttleStop(hour,minute,stop)
+    if(shuttle == "South Campus Shuttle"):
+        return  South_Campus_Shuttle.setShuttleStop(hour,minute,stop)
+
 
 
     

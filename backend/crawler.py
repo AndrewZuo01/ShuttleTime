@@ -3,7 +3,7 @@ import urllib.request
 from datetime import datetime
 import re
 
-# potential bug for break
+# potential bug for winter break
 
 # accordion-content-0 accordion-content-1
 
@@ -15,6 +15,7 @@ class Shuttle:
         self.__latitude = latitude
         self.__longitude = longitude
         self.__time_table = []
+        self.__reportStop = []
 
     def getName(self):
         return self.__name
@@ -119,6 +120,21 @@ class Shuttle:
     
     def getShuttleStop(self):
         return self.__time_table[1][0]
+    
+    def setShuttleStop(self,hour,minute,stop):
+        if(len(self.__time_table)==0):
+            self.fetchDataFromWebsite()
+        self.__reportStop = [hour,minute,stop]
+        # potential bug different day
+        
+    def findShuttleStop(self,stop):
+        if(len(self.__time_table)==0):
+            self.fetchDataFromWebsite()
+        if(len(self.__reportStop)==0):
+            return ["no reports"]
+        result = (datetime.datetime.now().hour() - self.__reportStop[0]) * 60 + (datetime.datetime.now().minute() - - self.__reportStop[1])
+        result = "The shuttle is at " + self.__reportStop[2] + " " + str(result) + " minutes ago"
+        return result
 
 # def updateAllWebsiteData():
 #     if not(Campus_Circulator.hasShuttleTimeTable() and DeBaliviere_Place_Shuttle.hasShuttleTimeTable() and Delmar_Loop_Shuttle.hasShuttleTimeTable() and Lewis_Collaborative_Shuttle.hasShuttleTimeTable() and Skinker_DeBaliviere_Shuttle.hasShuttleTimeTable() and South_Campus_Shuttle.hasShuttleTimeTable()):

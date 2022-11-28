@@ -1,5 +1,5 @@
 import { StyleSheet,ActivityIndicator,Switch} from 'react-native';
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect } from 'react';
 // npx expo-cli start
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import axios from "axios";
 
+let requestCounter = 0;
+
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -22,6 +24,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const [waitTimeLeftM, setWaitTimeLeftM] = useState("0");
   const [selectedShuttle, setSelectedShuttle] = React.useState("South Campus Shuttle");
   const [selectedShuttleStop, setSelectedShuttleStop] = React.useState("801 Skinker");
+  const [currentStop, setcurrentStop] = React.useState("no reports");
   const [menu, setMenu] = useState(0);
   var day = new Date().getDay();
   // var day = 2
@@ -32,11 +35,12 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   
   //accept or reject
   const getData = async (loc: string | null | undefined) => {
-    if(loc == null)
-      loc = selectedShuttleStop
+
+    const thisRequest = requestCounter++;
+    loc = loc ? loc : selectedShuttleStop;
       
-      try {
-        const response = await fetch('http://127.0.0.1:5000/shuttle', { 
+    try {
+      const response = await fetch('http://127.0.0.1:5000/shuttle', { 
         method: 'post', 
         headers: {
           Accept: 'application/json',
@@ -50,20 +54,73 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           stop: loc
         })
       });
+      console.log(`Executed the getData method: ${thisRequest}`);
+      console.log()
       // const response = await fetch('https://reactnative.dev/movies.json');
       const json = await response.json();
       // obj = JSON.parse(json); how to copy json data?
       // why I need data
       // setData(json)
       setWaitTime(json.time)
+      console.log(`${thisRequest}: waitTime: ${waitTime}`)
       setWaitTimeLeftH(json.hour)
       setWaitTimeLeftM(json.minute)
-      console.log(json);
+      console.log(`${thisRequest}: ${JSON.stringify(json)}`);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
+  }
+  const getStopData = async (loc: string | null | undefined) => {
+    loc = loc ? loc : selectedShuttleStop;
+    try {
+      const response = await fetch('http://127.0.0.1:5000/findstop', { 
+        method: 'post', 
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          shuttle: selectedShuttle, 
+          stop: loc
+        })
+      });
+      const json = await response.json();
+      setcurrentStop(json.result)
+    } catch (error) {
+      console.error(error);
+    } 
+    // finally {
+    //   setLoading(false);
+    // }
+  }
+  const sendStopData = async (loc: string | null | undefined) => {
+    loc = loc ? loc : selectedShuttleStop;
+    try {
+      const response = await fetch('http://127.0.0.1:5000/setstop', { 
+        method: 'post', 
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          shuttle: selectedShuttle, 
+          hour: JSON.stringify(hour),
+          minute: JSON.stringify(minute),
+          stop: loc
+        })
+      });
+    } catch (error) {
+      console.error(error);
+    } 
+    // finally {
+    //   setLoading(false);
+    // }
+  }
+
+  const getCurrentMap = async (loc: string | null | undefined) => {
+    loc = loc ? loc : selectedShuttleStop;
   }
   const dropdownShuttle = [
     {key:'South Campus Shuttle', value:'South Campus Shuttle'},
@@ -151,10 +208,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   //     setLoading(false)
   //   })
   // }
-  // useEffect(() => {
-  //   getData()
-  //   alert("get")
-  // },[]);
   useEffect(() => {
     getData(null)
   }, [isLoading,selectedShuttleStop]);
@@ -171,28 +224,32 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     <View style={styles.container}>
       {isLoading ? <ActivityIndicator/> : (
         <View>
-          
-          
           <SelectList 
             setSelected={setSelectedShuttle} 
+            // onSelect={() => alert(selectedShuttle)}
             fontFamily='lato'
             data={dropdownShuttle}  
             search={false} 
-            boxStyles={{borderRadius:0}} //override default styles
+            placeholder = {selectedShuttle}
+            boxStyles={{borderRadius:0}}
             defaultOption={{ key:'South Campus Shuttle', value:'South Campus Shuttle' }}   //default selected option
           />
+          
           <SelectList 
             setSelected={setSelectedShuttleStop} 
+            // onSelect={() => alert(selectedShuttleStop)} 
             fontFamily='lato'
             data={dropdownStop[menu]}  
             search={false} 
-            boxStyles={{borderRadius:0}} //override default styles
+            boxStyles={{borderRadius:0}}
+            placeholder = {selectedShuttleStop}
             defaultOption={{ key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza' }}   //default selected option
           />
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
           <Text style = {styles.title}>Next {selectedShuttle} at {selectedShuttleStop}: {waitTime}</Text>
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          <Text style = {styles.title}>Wait Time Left: {(parseInt(waitTimeLeftH) - (new Date().getHours())) * 60 + (parseInt(waitTimeLeftM) - (new Date().getMinutes()))} minutes</Text>
+          <Text style = {styles.title}>Wait Time Left: {(parseInt(waitTimeLeftH) - (hour)) * 60 + (parseInt(waitTimeLeftM) - (minute))} minutes</Text>
+          <Text style = {styles.title}>{currentStop}</Text>
         </View>
       )}
     </View>
@@ -214,3 +271,5 @@ const styles = StyleSheet.create({
     width: '80%',
   },
 });
+
+
