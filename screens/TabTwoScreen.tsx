@@ -14,20 +14,19 @@ export default function TabTwoScreen() {
   const urlWeb = '<a href=' + url + '>Washu shuttle website</a>'
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Here is a link of washu shuttle</Text>
+      <Text style={styles.title}>Thank you</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      {/* <EditScreenInfo path="/screens/TabTwoScreen.tsx" /> */}
-      <BrowserView>
+      {/* <BrowserView>
         <HTMLView
           value={urlWeb}
         />
-      </BrowserView>
-      <MobileView>
+      </BrowserView> */}
+      {/* <MobileView>
         <WebView
           originWhitelist={['*']}
           source={{ html: '<h1>Hello world</h1>' }}
         />
-      </MobileView>
+      </MobileView> */}
     </View>
   );
 }
