@@ -255,12 +255,18 @@ class Shuttle:
         if(status != "Normal" and status != "Late" and status != "Early"):
             return self.__status
         else:
-            if(minute < 10):
+            if(int(minute) < 10):
                 minute = "0" + str(minute)
             self.__status = [status,str(hour),str(minute)]
             return self.__status
         
-        
+Campus_Circulator  = Shuttle('Campus Circulator',0,1,'campus-circulator',0)
+DeBaliviere_Place_Shuttle = Shuttle('DeBaliviere Place Shuttle',0,2,'debaliviere-place',3)
+Delmar_Loop_Shuttle = Shuttle('Delmar Loop Shuttle',1,1,'delmar-loop',4)
+Lewis_Collaborative_Shuttle = Shuttle('Lewis Collaborative Shuttle',2,1,'lewis-center',5)
+Skinker_DeBaliviere_Shuttle = Shuttle('Skinker-DeBaliviere Shuttle',3,1,'skinker-debaliviere',2)
+South_Campus_Shuttle = Shuttle('South Campus Shuttle',4,1,'south-campus',0)
+West_Campus_Shuttle = Shuttle('West Campus Shuttle',1,1,'west-campus-shuttle',1)
 
 # print(South_Campus_Shuttle.getMapReport())
 # print(South_Campus_Shuttle.getMapReport())
