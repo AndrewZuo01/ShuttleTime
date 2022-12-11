@@ -7,8 +7,10 @@ import { Text, View } from '../components/Themed';
 export default function ModalScreen() {
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Add some guides</Text>
       <Text style={styles.title}>Check with the campus GIS technician</Text>
-      <Text style={styles.title}>Implement more function e.g. shuttle reservation, showing capacity</Text>
+      <Text style={styles.title}>Implement more functions e.g. shuttle reservation, showing capacity</Text>
+      <Text style={styles.title}>Check student report data, current it takes last report</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       
       {/* <EditScreenInfo path="/screens/ModalScreen.tsx" /> */}

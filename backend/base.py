@@ -9,13 +9,7 @@ import crawler
 api = Flask(__name__)
 CORS(api)
 
-Campus_Circulator  = crawler.Shuttle('Campus Circulator',0,1,'campus-circulator',0)
-DeBaliviere_Place_Shuttle = crawler.Shuttle('DeBaliviere Place Shuttle',0,2,'debaliviere-place',3)
-Delmar_Loop_Shuttle = crawler.Shuttle('Delmar Loop Shuttle',1,1,'delmar-loop',4)
-Lewis_Collaborative_Shuttle = crawler.Shuttle('Lewis Collaborative Shuttle',2,1,'lewis-center',5)
-Skinker_DeBaliviere_Shuttle = crawler.Shuttle('Skinker-DeBaliviere Shuttle',3,1,'skinker-debaliviere',2)
-South_Campus_Shuttle = crawler.Shuttle('South Campus Shuttle',4,1,'south-campus',0)
-West_Campus_Shuttle = crawler.Shuttle('West Campus Shuttle',1,1,'west-campus-shuttle',1)
+
 
 @api.route('/shuttle', methods=['GET', 'POST'])
 def getResult():
@@ -80,19 +74,19 @@ def findMap():
 
 def findShuttle(shuttle):
     if(shuttle == "Campus Circulator"):
-        return  Campus_Circulator
+        return  crawler.Campus_Circulator
     if(shuttle == "DeBaliviere Place Shuttle"):
-        return  DeBaliviere_Place_Shuttle
+        return  crawler.DeBaliviere_Place_Shuttle
     if(shuttle == "Delmar Loop Shuttle"):
-        return  Delmar_Loop_Shuttle
+        return  crawler.Delmar_Loop_Shuttle
     if(shuttle == "Lewis Collaborative Shuttle"):
-        return  Lewis_Collaborative_Shuttle
+        return  crawler.Lewis_Collaborative_Shuttle
     if(shuttle == "Skinker-DeBaliviere Shuttle"):
-        return  Skinker_DeBaliviere_Shuttle
+        return  crawler.Skinker_DeBaliviere_Shuttle
     if(shuttle == "South Campus Shuttle"):
-        return  South_Campus_Shuttle
+        return  crawler.South_Campus_Shuttle
     if(shuttle == "West Campus Shuttle"):
-        return  West_Campus_Shuttle
+        return  crawler.West_Campus_Shuttle
 
 def findShuttleTime(shuttle,day,hour,minute,stop):
     return findShuttle(shuttle).findShuttleTime(day,hour,minute,stop)

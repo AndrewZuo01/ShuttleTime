@@ -1,4 +1,4 @@
-import { StyleSheet,ActivityIndicator,Switch, FlatList, Button, TouchableOpacity} from 'react-native';
+import { StyleSheet,ActivityIndicator,Switch, FlatList, Button, TouchableOpacity, Platform} from 'react-native';
 import React, { useState,useEffect } from 'react';
 // npx expo-cli start
 import EditScreenInfo from '../components/EditScreenInfo';
@@ -303,12 +303,14 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 };
 const styles = StyleSheet.create({
   container: {
+    marginTop: Platform.OS === 'ios' ? 300 : 0,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 5,
   },
   buttoncontainer: {
+    
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
