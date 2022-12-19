@@ -108,7 +108,7 @@ class Shuttle:
 
     def updateLongitude(self,longitude):
         self.__longitude = longitude
-    
+    # only runs at exact time on sever
     def fetchDataFromWebsite(self):
         basic_url = 'https://parking.wustl.edu/items/south-campus/'
         Url = basic_url + self.__websiteUrl + '/'
@@ -167,7 +167,7 @@ class Shuttle:
             return True
         else:
             return False
-        
+    # read only, no data race
     def findShuttleTime(self,day,hour,minute,stop):
         if(len(self.__time_table)==0):
             self.fetchDataFromWebsite()
@@ -210,7 +210,10 @@ class Shuttle:
         result = (datetime.datetime.now().hour() - self.__reportStop[0]) * 60 + (datetime.datetime.now().minute() - - self.__reportStop[1])
         result = "The shuttle is at " + self.__reportStop[2] + " " + str(result) + " minutes ago"
         return result
-    
+
+    def getStopCoordinate(self):
+        return self.__stopCoordinate
+
     def mapUrlLoad(self):
         mapUrl = "https://gis-arcsrv1.wustl.edu/arcgis/rest/services/Hosted/Circulator_Locations_Portal/FeatureServer/0/query?f=json&where=(ignition%20%3D%20%271%27)%20AND%20(visible%20%3D%201)&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=%7B%22xmin%22%3A-10057889.929889776%2C%22ymin%22%3A4657155.259379659%2C%22xmax%22%3A-10018754.171407819%2C%22ymax%22%3A4696291.017861616%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%7D%7D&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*&outSR=102100&resultType=tile"
         page = urllib.request.urlopen(mapUrl)
@@ -234,23 +237,15 @@ class Shuttle:
             #     # device = re.search(r"\"lastupdated\":\":(.*?) on ", drowAttribute).group(1)
             #     # shuttle = re.search(r"\'type\': \'(.*?)\'", drow[i]).group(1)
             #     print(drowAttribute)
+    # result can have data race, try atomicty
     def getMapReport(self):
         self.getMapData()
         if len(self.__mapStop)==0:
             return ["no map report"]
         if not (self.__name in shuttle_list_map):
             return ["no available map report for this shuttle(route too complex)"]
-        a = []
+        return self.__mapStop
 
-        for shuttles in self.__mapStop:
-        # print(shuttles)
-            map_result = closest(self.__stopCoordinate, (shuttles[3],shuttles[2]))
-        # print(self.__stopCoordinate)
-            index = self.__stopCoordinate.index(map_result)
-            b = "Shuttle is near " + str(self.getShuttleStop()[index]) + " at " + str(shuttles[1]) +  " reported by map"
-            a.append(b)
-        
-        return a    
     def getShuttleStatus(self,status,hour,minute):
         if(status != "Normal" and status != "Late" and status != "Early"):
             return self.__status
@@ -297,5 +292,7 @@ West_Campus_Shuttle = Shuttle('West Campus Shuttle',1,1,'west-campus-shuttle',1)
 #     print(Lewis_Collaborative_Shuttle.getShuttleStop())
 #     print(Skinker_DeBaliviere_Shuttle.getShuttleStop())
 #     print(South_Campus_Shuttle.getShuttleStop())
+
+
 
 

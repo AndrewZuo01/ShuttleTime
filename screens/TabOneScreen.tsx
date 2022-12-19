@@ -1,4 +1,4 @@
-import { StyleSheet,ActivityIndicator,Switch, FlatList, Button, TouchableOpacity, Platform} from 'react-native';
+import { StyleSheet,ActivityIndicator,Switch, FlatList, Button, TouchableOpacity, Platform, ImageBackground} from 'react-native';
 import React, { useState,useEffect } from 'react';
 // npx expo-cli start
 import EditScreenInfo from '../components/EditScreenInfo';
@@ -238,7 +238,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   
   return (
     <View style={styles.container}>
+      {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}></ImageBackground> */}
       {isLoading ? <ActivityIndicator/> : (
+        
         <View>
           <SelectList 
             setSelected={setSelectedShuttle} 

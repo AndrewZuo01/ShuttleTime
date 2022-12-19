@@ -66,7 +66,7 @@ def findMap():
     shuttle = value['shuttle']
     # avoid race condition
     check = value['check'] 
-    result = findShuttleMap(shuttle,check)
+    result = findShuttleMap(shuttle)
     response_body = {
         "result" : result
     }
@@ -98,10 +98,16 @@ def findShuttleStop(shuttle,hour,minute,stop):
 def setShuttleStop(shuttle,hour,minute,stop):
     return findShuttle(shuttle).setShuttleStop(hour,minute,stop)
 
-def findShuttleMap(shuttle,check):
-    if(check == "c"):
-        return findShuttle(shuttle).getMapReport()
-    return ["no map report"]
+def findShuttleMap(shuttle):
+    Shuttle = findShuttle(shuttle)
+    mapStop = Shuttle.getMapReport()
+    result = []
+    for shuttles in mapStop:
+        map_result = crawler.closest(Shuttle.getStopCoordinate, (shuttles[3],shuttles[2]))
+        index = mapStop.index(map_result)
+        str = "Shuttle is near " + str(Shuttle.getShuttleStop()[index]) + " at " + str(shuttles[1]) +  " reported by map"
+        result.append(str)
+    return result   
 def findShuttleStatus(shuttle,status,hour,minute):
     return findShuttle(shuttle).getShuttleStatus(status,hour,minute)
 
