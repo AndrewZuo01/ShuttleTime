@@ -237,11 +237,14 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   }, [selectedShuttle]);
   
   return (
+    <View style = {{flex:1}}>
+      <ImageBackground source={require('./img/background2.jpeg')}  style={ styles.imageback}>
     <View style={styles.container}>
-      {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}></ImageBackground> */}
+      
       {isLoading ? <ActivityIndicator/> : (
         
-        <View>
+        <View >
+          <ImageBackground source={require('./img/background1.jpeg')} resizeMode="cover" >
           <SelectList 
             setSelected={setSelectedShuttle} 
             // onSelect={() => alert(selectedShuttle)}
@@ -264,7 +267,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             defaultOption={{ key:'Mallinckrodt Bus Plaza', value:'Mallinckrodt Bus Plaza' }}   //default selected option
           />
           
-          <View>
+          <View >
             <Text style = {styles.title}>Next {selectedShuttle} at {selectedShuttleStop}: {waitTime}</Text>
             <Text style = {styles.text}>Wait Time Left: {(parseInt(waitTimeLeftH) - (hour)) * 60 + (parseInt(waitTimeLeftM) - (minute))} minutes</Text>
             <Text style = {styles.text}>Status: {currentStopReport}</Text>
@@ -298,8 +301,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             </TouchableOpacity>
 
           </View>
+          </ImageBackground>
         </View>
+        
       )}
+      
+    </View>
+    </ImageBackground>
     </View>
   );
 };
@@ -342,6 +350,14 @@ const styles = StyleSheet.create({
   textbold: {
     color : "white",
     fontWeight: 'bold',
+  },
+  // image: {
+  //   height: 200
+  // },
+  imageback: {
+    flex: 1,
+    justifyContent: 'center',
+    // height: '100%'
   },
 });
 
