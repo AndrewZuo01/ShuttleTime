@@ -246,10 +246,19 @@ class Shuttle:
             return ["no available map report for this shuttle(route too complex)"]
         return self.__mapStop
 
-    def getShuttleStatus(self,status,hour,minute):
+    def getShuttleStatus(self,status,hour,minute,longitude,latitude):
         if(status != "Normal" and status != "Late" and status != "Early"):
             return self.__status
         else:
+            userCoordinate = (latitude,longitude)
+            min = 9999999999999
+            tmp = self.getStopCoordinate()
+            for coor in tmp:
+                dis = distance(coor,userCoordinate)
+                if(dis < min):
+                    min = dis
+            if(min > 30):
+                return self.__status + "report fail (too far from stops)"
             if(int(minute) < 10):
                 minute = "0" + str(minute)
             self.__status = [status,str(hour),str(minute)]

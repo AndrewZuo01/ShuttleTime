@@ -43,7 +43,9 @@ def setStop():
     status = value['status']
     hour = value['hour'] 
     minute = value['minute'] 
-    result = findShuttleStatus(shuttle,status,hour,minute)
+    longitude = value['longitude']
+    latitude = value['latitude']
+    result = findShuttleStatus(shuttle,status,hour,minute,longitude,latitude)
     response_body = {
         "report": result
     }
@@ -108,8 +110,8 @@ def findShuttleMap(shuttle):
         str = "Shuttle is near " + str(Shuttle.getShuttleStop()[index]) + " at " + str(shuttles[1]) +  " reported by map"
         result.append(str)
     return result   
-def findShuttleStatus(shuttle,status,hour,minute):
-    return findShuttle(shuttle).getShuttleStatus(status,hour,minute)
+def findShuttleStatus(shuttle,status,hour,minute,longitude,latitude):
+    return findShuttle(shuttle).getShuttleStatus(status,hour,minute,longitude,latitude)
 
 
 
