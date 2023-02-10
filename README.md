@@ -5,15 +5,6 @@
  
  Paper:https://drive.google.com/drive/folders/1t0ymOcenVAlgbrJ9MDwx9bYzQIxwQBr0?usp=sharing
  
- 
-## Plan
-Long-term: The app & website for WashU students who want to take campus shuttles
-
-Short-term(this week):
-- Update crawler
-- finish student position check
-
-
 
 ## Deployment
 
